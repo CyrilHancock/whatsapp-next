@@ -19,7 +19,7 @@ function ChatScreen({chat,messages}) {
   const [user]=useAuthState(auth)
   const router=useRouter();
   const endOfMessageRef=useRef()
-  const [messagesSnaphot]=useCollection(collection(db,`chats`,router.query.id,"messages"),orderBy("timestamp","asc"))
+  const [messagesSnaphot]=useCollection(query(collection(db,`chats`,router.query.id,"messages"),orderBy("timestamp","asc")))
   const [recipientSnapshot]=useCollection(query(collection(db,"users"),where("email","==",getRecipientEmail(chat.users,user))))
   const showMessages=()=>{
    if(messagesSnaphot)
@@ -65,7 +65,7 @@ await  addDoc(collection(db,`chats`,router.query.id,"messages"),{
 });
 
     inputEl.current.value=""
-  
+  scrollToBottom();
   }
   const recipient=recipientSnapshot?.docs?.[0]?.data()
   const recipentEmail=getRecipientEmail(chat.users,user)

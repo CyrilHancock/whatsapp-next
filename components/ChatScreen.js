@@ -1,6 +1,6 @@
 import { Avatar, IconButton } from '@material-ui/core'
 import { useRouter } from 'next/router'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import styled from 'styled-components'
 import { auth, db } from '../firebase'
@@ -16,6 +16,8 @@ import MicIcon from "@material-ui/icons/Mic"
 import { serverTimestamp } from "firebase/firestore";
 import getRecipientEmail from '../utils/getRecipientEmail'
 import TimeAgo from "timeago-react"
+
+import { Dropdown } from 'react-bootstrap'
 function ChatScreen({chat,messages}) {
   const inputEl = useRef(null);
   const [user]=useAuthState(auth)
@@ -72,13 +74,14 @@ await  addDoc(collection(db,`chats`,router.query.id,"messages"),{
   }
   const recipient=recipientSnapshot?.docs?.[0]?.data()
   const recipentEmail=getRecipientEmail(chat.users,user)
-
+  const [menu,setMenu]=useState(false);
+  const onClick = () => setMenu(!menu);
   return (
     <Container>
       <Header>
-      {recipient?(<Avatar src={recipient?.photoURL}/>):(<Avatar>{recipentEmail[0]}</Avatar>)}
+      {recipient?(<Avatar  src={recipient?.photoURL}/>):(<Avatar>{recipentEmail[0]}</Avatar>)}
       <HeaderInformation>
-        <h3>
+        <h3 className='text-base'>
           {recipentEmail}
         </h3>
         {recipientSnapshot?(<p>Last active:{' '} {recipient?.lastSeen?.toDate()?(
@@ -88,10 +91,20 @@ await  addDoc(collection(db,`chats`,router.query.id,"messages"),{
       </HeaderInformation>
       <HeaderIcons>
       <IconButton>
+        
         <AttachFile onClick={()=>setOpen(true)} />
+        
       </IconButton>
       <IconButton>
-        <MoreVert/>
+      <Dropdown>
+  <Dropdown.Toggle className='outline-0 border-0 focus:outline-0 active:border-0 active:shadow-none' >
+  <MoreVert  className='text-gray-500 ' onClick={onClick}/>
+  </Dropdown.Toggle>
+  <Dropdown.Menu className={`bg-white top-0 border  text-black text-xl ${menu==true?"flex":"hidden"}`}>
+    <Dropdown.Item onClick={() => auth.signOut()}>Logout</Dropdown.Item>
+    </Dropdown.Menu>
+</Dropdown>
+     
       </IconButton>
       </HeaderIcons>
       </Header>

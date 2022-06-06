@@ -15,7 +15,7 @@ export default function Home() {
       <Container>
           <Sidebar/>
           <SideContainer>
-            ADDDDDDDDDD
+            <img className="h-full" src="https://api.backlinko.com/app/uploads/2021/03/whatsapp-user-statistics.png"/>
           </SideContainer>
       </Container>
     </div>
@@ -25,5 +25,6 @@ const Container = styled.div`
   display: flex;
 `;
 const SideContainer=styled.div`
+flex:1;
 `
             

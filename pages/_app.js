@@ -4,6 +4,9 @@ import { auth, db } from '../firebase'
 import  Login from './login';
 import Loading from '../components/Loading';
 import { useEffect } from 'react';
+import { RecoilRoot } from 'recoil'
+import Modal from '../components/Modal'
+
 import { collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
 function MyApp({ Component, pageProps }) {
   const [user,loading]=useAuthState(auth)
@@ -29,7 +32,10 @@ function MyApp({ Component, pageProps }) {
   {
     return <Login/>
   }
-  return <Component {...pageProps} />
+  return  <RecoilRoot>
+  <Component {...pageProps} />
+  </RecoilRoot>
+  
 }
 
 export default MyApp

@@ -7,6 +7,7 @@ import ChatScreen from "../../components/ChatScreen";
 import Sidebar from "../../components/Sidebar";
 import { auth, db } from "../../firebase";
 import getRecipientEmail from "../../utils/getRecipientEmail";
+import Modal from '../../components/Modal'
 
 function Chat({ messages, chat }) {
      const [user]=useAuthState(auth)
@@ -18,6 +19,7 @@ function Chat({ messages, chat }) {
       <Sidebar />
       <ChatContainer>
         <ChatScreen  chat={chat} messages={messages}/>
+      <Modal/>
       </ChatContainer>
     </Container>
   );

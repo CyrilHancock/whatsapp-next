@@ -1,5 +1,6 @@
 import { Avatar, Button, IconButton } from "@material-ui/core";
 import styled from "styled-components";
+import Modal from '../components/Modal'
 import  ChatIcon  from "@material-ui/icons/Chat";
 import  MoreVertIcon  from "@material-ui/icons/MoreVert";
 import  SearchIcon  from "@material-ui/icons/Search";
@@ -9,7 +10,11 @@ import { addDoc, collection, doc, getDoc, onSnapshot, query, where } from "fireb
 import { useAuthState } from "react-firebase-hooks/auth";
 import {useCollection} from "react-firebase-hooks/firestore"
 import Chat from "./Chat";
+import { useRecoilState } from 'recoil'
+import { usermodalState } from '../atoms/usermodalAtom'
 import { useEffect, useState } from "react";
+import NewChat from './NewChat'
+
  function Sidebar() {
   const [user,loading]=useAuthState(auth)
 
@@ -20,6 +25,7 @@ const q = query(chatsRef, where("users","array-contains",user.email));
 const [chatsSnapshot]=useCollection(q)
 
 
+const [open,setOpen]=useRecoilState(usermodalState);
 
 
   async function createNewChat(){
@@ -35,7 +41,7 @@ const [chatsSnapshot]=useCollection(q)
   }
   else
   {
-    alert(`chat with ${input} already exist`)
+    alert(`chat with ${input} already exist or invalid email`)
   }
 
 }
@@ -62,14 +68,17 @@ return (
         <SearchInput placeholder="Search in Chats"/>
         
       </Search>
-    <SideBarButton onClick={createNewChat}>
+    <SideBarButton onClick={()=>setOpen(true)}>
         START A NEW CHAT 
     </SideBarButton>
       {/* <ListofChat/> */}
      {chatsSnapshot?.docs.map(c=>(
      <Chat key={c.id} id={c.id} users={c.data().users}/>
      ))}       
+      <NewChat/>
+
     </Container>
+    
   );
 }
 

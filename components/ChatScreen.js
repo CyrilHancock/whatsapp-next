@@ -9,6 +9,8 @@ import { AttachFile } from '@material-ui/icons'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { collection, orderBy, setDoc,doc,addDoc, where, query } from 'firebase/firestore'
 import Message from './Message'
+import { useRecoilState } from 'recoil'
+import { modalState } from '../atoms/modalAtoms'
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon"    
 import MicIcon from "@material-ui/icons/Mic"
 import { serverTimestamp } from "firebase/firestore";
@@ -18,7 +20,8 @@ function ChatScreen({chat,messages}) {
   const inputEl = useRef(null);
   const [user]=useAuthState(auth)
   const router=useRouter();
-  const endOfMessageRef=useRef()
+  const endOfMessageRef=useRef();
+  const [open,setOpen]=useRecoilState(modalState)
   const [messagesSnaphot]=useCollection(query(collection(db,`chats`,router.query.id,"messages"),orderBy("timestamp","asc")))
   const [recipientSnapshot]=useCollection(query(collection(db,"users"),where("email","==",getRecipientEmail(chat.users,user))))
   const showMessages=()=>{
@@ -85,7 +88,7 @@ await  addDoc(collection(db,`chats`,router.query.id,"messages"),{
       </HeaderInformation>
       <HeaderIcons>
       <IconButton>
-        <AttachFile/>
+        <AttachFile onClick={()=>setOpen(true)} />
       </IconButton>
       <IconButton>
         <MoreVert/>
